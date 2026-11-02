@@ -8,7 +8,8 @@
 </p>
 
 <p align="center">
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-0.1.0-0891b2?style=flat-square" alt="Version 0.1.0"></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-0.1.1-0891b2?style=flat-square" alt="Version 0.1.1"></a>
+  <a href="https://www.npmjs.com/package/dsh-context-map"><img src="https://img.shields.io/npm/v/dsh-context-map?style=flat-square&color=CB3837" alt="npm"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-16a34a?style=flat-square" alt="License"></a>
   <a href="package.json"><img src="https://img.shields.io/badge/node-%3E%3D20-339933?style=flat-square" alt="Node"></a>
   <a href="package.json"><img src="https://img.shields.io/badge/runtime%20deps-0-blue?style=flat-square" alt="Zero dependencies"></a>

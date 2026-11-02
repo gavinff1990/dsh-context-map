@@ -1,6 +1,6 @@
 {
   "name": "dsh-context-map",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "把一段对话的上下文画成信息架构图:把目标、背景、决策、动作、产物、风险和待确认项整理成一张分层结构图,输出自包含 SVG、可缩放可搜索的 HTML 和 Mermaid Markdown。Turn a conversation's context into an information-architecture map: goals, background, decisions, actions, artifacts, risks and open questions in one layered diagram, exported as a self-contained SVG, an interactive searchable HTML page and Mermaid Markdown.",
   "type": "module",
   "main": "lib/index.js",

@@ -4,6 +4,17 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.1] — 2026-11-02
+
+First version available on npm. No code change from 0.1.0: the version was
+bumped because npm reserves the name through a staged publish, so 0.1.0 could
+not be published directly.
+
+### Added
+
+- Published to the npm registry as `dsh-context-map`, so `dsh plugin --profile web add dsh-context-map`
+  installs a tarball instead of cloning the repository.
+
 ## [0.1.0] — 2026-11-02
 
 First release.
