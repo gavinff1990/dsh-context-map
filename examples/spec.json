@@ -1,0 +1,35 @@
+{
+  "title": "把 DSH 插件做成三个渠道都能上架的产品",
+  "subtitle": "本次对话的上下文结构：调研、设计、交付与风险",
+  "slug": "context-map-example",
+  "locale": "zh",
+  "theme": "auto",
+  "nodes": [
+    { "id": "goal", "label": "开发 DSH 插件并完成三渠道上架", "kind": "goal", "detail": "能装、能用、能过安全扫描，不是占位 demo", "status": "active" },
+
+    { "id": "b1", "parent": "goal", "label": "渠道调研", "kind": "context", "detail": "三个目录的收录机制各不相同，必须先摸清规则", "status": "done" },
+    { "id": "b1a", "parent": "b1", "label": "dsh.so 是验收清单制", "kind": "context", "detail": "dsh 字段 / cordis 清单 / DSH topic 三者有其一；README 带安装说明；SPDX 许可证；源码可扫描" },
+    { "id": "b1b", "parent": "b1", "label": "marketplace 靠 GitHub topic 自动同步", "kind": "context", "detail": "仓库描述即卡片摘要，README 即详情页，缺 LICENSE 会被标注为保留所有权利" },
+    { "id": "b1c", "parent": "b1", "label": "curated 清单是一插件一 YAML", "kind": "context", "detail": "data/plugins/<owner>__<repo>.yml，README 由脚本生成，不要手改" },
+
+    { "id": "b2", "parent": "goal", "label": "产品设计", "kind": "decision", "detail": "四件事定下来，后面只是执行", "status": "done" },
+    { "id": "b2a", "parent": "b2", "label": "方向：对话上下文信息架构图", "kind": "decision", "detail": "目标、背景、决策、动作、产物、风险、待确认分组成图", "status": "done" },
+    { "id": "b2b", "parent": "b2", "label": "零运行时依赖", "kind": "decision", "detail": "直接注册原始 ToolDefinition，parameters 写 JSON Schema，不跟随作者 DSL 漂移", "status": "done" },
+    { "id": "b2c", "parent": "b2", "label": "输出 SVG / HTML / Mermaid 三件套", "kind": "decision", "detail": "SVG 进文档，HTML 给人看，Markdown 进 PR 可审阅", "status": "done" },
+
+    { "id": "b3", "parent": "goal", "label": "交付计划", "kind": "action", "detail": "从渲染内核到三份提交物", "status": "active" },
+    { "id": "b3a", "parent": "b3", "label": "确定性树布局与双主题渲染", "kind": "action", "detail": "无 canvas、无随机数，同输入永远得到同一张图", "status": "active" },
+    { "id": "b3b", "parent": "b3", "label": "单元测试与真实启动冒烟", "kind": "action", "detail": "覆盖规格校验、布局不重叠、转义、插件注册与写盘", "status": "planned" },
+    { "id": "b3c", "parent": "b3", "label": "三渠道提交物与 PR 文案", "kind": "action", "detail": "dsh.so 提交串、marketplace 表单、两处 curated 清单补丁", "status": "planned" },
+    { "id": "b3d", "parent": "b3", "label": "dsh-context-map 仓库", "kind": "artifact", "detail": "lib/、bin/、docs/、examples/、LICENSE、CI", "status": "active" },
+
+    { "id": "b4", "parent": "goal", "label": "风险与待办", "kind": "risk", "detail": "上架前必须解决的两件事", "status": "active" },
+    { "id": "b4a", "parent": "b4", "label": "本机没有 GitHub / npm 登录态", "kind": "risk", "detail": "推仓库、发 npm 包、开 PR 都需要你完成一次授权", "status": "blocked" },
+    { "id": "b4b", "parent": "b4", "label": "插件进程 cwd ≠ 会话工作区", "kind": "risk", "detail": "默认输出目录可能落在应用目录，模型应显式传绝对 outDir", "status": "active" },
+    { "id": "b4c", "parent": "b4", "label": "GitHub 用户名与仓库归属未定", "kind": "question", "detail": "决定 curated 文件名与全部链接", "status": "unknown" }
+  ],
+  "links": [
+    { "from": "b4a", "to": "b3c", "label": "阻塞" },
+    { "from": "b4b", "to": "b3a", "label": "影响默认值" }
+  ]
+}
