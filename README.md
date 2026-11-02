@@ -8,6 +8,7 @@
 </p>
 
 <p align="center">
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-0.1.0-0891b2?style=flat-square" alt="Version 0.1.0"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-16a34a?style=flat-square" alt="License"></a>
   <a href="package.json"><img src="https://img.shields.io/badge/node-%3E%3D20-339933?style=flat-square" alt="Node"></a>
   <a href="package.json"><img src="https://img.shields.io/badge/runtime%20deps-0-blue?style=flat-square" alt="Zero dependencies"></a>
@@ -16,11 +17,13 @@
 </p>
 
 <p align="center">
+  <a href="#什么场景用">场景</a> ·
   <a href="#快速开始">快速开始</a> ·
   <a href="#示例">示例</a> ·
   <a href="#能力">能力</a> ·
   <a href="#参数">参数</a> ·
   <a href="#安装详解与排错">安装排错</a> ·
+  <a href="#和其它工具的区别">区别</a> ·
   <a href="#常见问题">常见问题</a>
 </p>
 
@@ -36,13 +39,32 @@
 
 **为 DeepSeek Harness 补齐「把对话变成结构」这一步。**
 
-长对话结束时，真正值钱的东西散落在上下文里：为什么改了方向、哪个文件才是产物、还有哪些没定。翻聊天记录找不回来，截图又不带结构。
+一次长会话结束时，真正值钱的东西散落在上下文里：为什么改了方向、哪个文件才是产物、还有哪些没定。翻聊天记录找不回来，截图又不带结构。
 
 `dsh-context-map` 给 agent 一个工具 `context_map`：agent 把对话蒸馏成节点，插件负责**校验 → 布局 → 渲染**。你得到的是左→右推进的分层结构，不是放射状的思维导图 —— 父子关系一眼可读。
 
 - **零运行时依赖**，不带 API key，不联网，不读会话日志
 - **确定性布局**：同一份输入永远得到同一张图，同一天重建字节一致，可以提交进 git
 - **三种产物**：矢量 SVG、可缩放可搜索的 HTML、可进 PR 的 Mermaid Markdown
+
+> **懒得自己装？** 把这句话发给你的 agent：
+>
+> ```text
+> 帮我安装 dsh-context-map 插件：dsh plugin --profile web add dsh-context-map，
+> 装完跑 dsh --profile web --dump-config 确认有 context-map 这一行。
+> ```
+
+## 什么场景用
+
+| 场景 | 你问 agent 的话 | 图上会出现什么 |
+| :--- | :--- | :--- |
+| 🧭 **项目复盘** | 「把这次讨论画成上下文架构图」 | 目标、走过的弯路、最终拍板、待办 |
+| 🧩 **技术选型** | 「把我们比较过的方案画成图，标出为什么选 B」 | 候选方案、淘汰理由、决策、风险 |
+| 📝 **PR 说明** | 「把这次改动的来龙去脉画成图，放进 `docs/`」 | 动机、改动点、影响面、遗留问题 |
+| 📋 **需求拆解** | 「把这段需求整理成信息架构图」 | 目标、约束、拆分出的动作、未定项 |
+| 🔥 **事故复盘** | 「把这次故障的上下文画成图」 | 现象、根因、处置、后续预防 |
+
+同一个工具也能反过来用：**图是先写给你自己看的** —— 把模糊的讨论压成 8–20 个节点，哪块没想清楚会立刻暴露（那些节点只能写成 `question`）。
 
 ## 快速开始
 
@@ -237,13 +259,24 @@ dsh plugin --profile web remove dsh-context-map       # 卸载
 - Node `>=20`（用到 `node:test`、`String.replaceAll`）。
 - macOS / Linux / Windows。
 
-## 设计取舍
+## 和其它工具的区别
 
-**摘要交给 agent，渲染交给插件。** 插件不调模型：它没有密钥、没有 token 成本、输出可复现，也因此能用一个纯函数的方式被测穿。
+市面上的「画图」工具很多，输入不同：
 
-**注册原始 `ToolDefinition`，不依赖作者 DSL。** `parameters` 就是模型看到的 JSON Schema，`dsh-tools` 升级不会让插件漂移；整个包 `dependencies` 为空。
+| 工具类型 | 输入 | 产出 | 适合 |
+| :--- | :--- | :--- | :--- |
+| 思维导图（XMind / 幕布） | 你手打的提纲 | 放射状导图 | 头脑风暴；不擅长表达层级与跨支依赖 |
+| 从仓库生成架构图 | 代码仓库 | 系统 / 模块结构 | 读懂一个 codebase；不记录「为什么这么定」 |
+| 通用 diagram 工具（Mermaid / draw.io） | 你写的 DSL 或手工摆放 | 图 | 精确控制；但排版和配色要自己调 |
+| **dsh-context-map** | **一段对话** | **分层信息架构图 + 三种格式** | **复盘、交接、PR 说明；不读代码，不调模型** |
 
-**布局是算出来的。** 没有 canvas、没有字体度量 API：文本宽度用 CJK 感知的估算，Node 里算出什么，浏览器里就是什么。
+它不替代前三种，补的是它们的空白：**代码里没有的东西 —— 决策、风险、待确认 —— 只存在于对话里。**
+
+## 更新
+
+### 0.1.0 — 2026-11-02
+
+首个版本：`context_map` 工具、确定性树布局、SVG / 交互式 HTML / Mermaid 三格式、CLI、55 个测试。完整记录见 [CHANGELOG](CHANGELOG.md)。
 
 ## 限制
 
@@ -265,6 +298,9 @@ DSH 的会话是 `session.v4.jsonl.zstd`——多帧拼接的 zstd 内部格式�
 
 **每次生成的图会不一样吗？**
 坐标完全确定，时间戳只到日。同一天重建是字节一致的；跨天只有那一行日期会变。
+
+**能画代码结构吗？**
+不能，也不打算做：那是「从仓库生成架构图」这类工具的事。这里的输入是对话，产出是对话里那些不进代码的东西。
 
 ## 本地开发
 

@@ -4,10 +4,11 @@
 
 <p align="center">
   <b>Turn a conversation's context into an information-architecture map you can ship.</b><br>
-  <sub>Goals · background · decisions · actions · artifacts · risks · open questions — layered into one diagram, exported as SVG, interactive HTML and Mermaid.</sub>
+  <sub>Goals · background · decisions · actions · artifacts · risks · open questions — one layered diagram, exported as SVG, interactive HTML and Mermaid.</sub>
 </p>
 
 <p align="center">
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-0.1.0-0891b2?style=flat-square" alt="Version 0.1.0"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-16a34a?style=flat-square" alt="License"></a>
   <a href="package.json"><img src="https://img.shields.io/badge/node-%3E%3D20-339933?style=flat-square" alt="Node"></a>
   <a href="package.json"><img src="https://img.shields.io/badge/runtime%20deps-0-blue?style=flat-square" alt="Zero dependencies"></a>
@@ -16,11 +17,13 @@
 </p>
 
 <p align="center">
+  <a href="#when-to-use-it">Scenarios</a> ·
   <a href="#quick-start">Quick start</a> ·
   <a href="#examples">Examples</a> ·
   <a href="#capabilities">Capabilities</a> ·
   <a href="#parameters">Parameters</a> ·
   <a href="#installation--troubleshooting">Troubleshooting</a> ·
+  <a href="#how-it-differs">Comparison</a> ·
   <a href="#faq">FAQ</a>
 </p>
 
@@ -43,6 +46,25 @@ At the end of a long session the valuable part is buried: why the direction chan
 - **Zero runtime dependencies**, no API key, no network, no session-log access
 - **Deterministic layout**: the same input always produces the same map; a same-day rebuild is byte-identical, so the artifact can be committed
 - **Three artifacts**: vector SVG, zoomable searchable HTML, reviewable Mermaid Markdown
+
+> **Rather not install it by hand?** Send this to your agent:
+>
+> ```text
+> Install the dsh-context-map plugin: dsh plugin --profile web add dsh-context-map
+> Then run dsh --profile web --dump-config and confirm the context-map row is there.
+> ```
+
+## When to use it
+
+| Situation | What you say to the agent | What ends up on the map |
+| :--- | :--- | :--- |
+| 🧭 **Project retro** | "Map the context of this discussion" | Goal, dead ends, final calls, next steps |
+| 🧩 **Tech choice** | "Map the options we compared and why we picked B" | Candidates, rejected reasons, decision, risks |
+| 📝 **PR write-up** | "Map what this change is for, put it under `docs/`" | Motivation, touch points, blast radius, leftovers |
+| 📋 **Requirement breakdown** | "Turn this brief into an information-architecture map" | Goal, constraints, actions, open items |
+| 🔥 **Incident review** | "Map the context of this failure" | Symptom, root cause, response, prevention |
+
+It works in the other direction too: **the map is first for you**. Compressing a fuzzy discussion into 8–20 nodes exposes the parts you have not actually decided — they can only come out as `question`.
 
 ## Quick start
 
@@ -75,8 +97,6 @@ dsh --profile web --dump-config | grep -A1 context-map
 
 ### 2. Ask for it
 
-Say it in plain language:
-
 > Map the context of this discussion.
 > Draw an architecture map of this project, with risks and open questions.
 
@@ -106,7 +126,7 @@ Three real artifacts, all generated from `examples/spec.json`:
 
 | Surface | Best for | What you get |
 | :--- | :--- | :--- |
-| 🖼️ **SVG** | Documents, README, slides | Vector, no re-encoding, adapts to light/dark |
+| 🖼️ **SVG** | Documents, README, slides | Vector, adapts to light/dark |
 | 🖱️ **HTML** | Reading it yourself or sharing it | Zoom, fit, search, filter by kind, outline jumps, A3 print |
 | 🧾 **Markdown** | Pull requests and wikis | Mermaid source + outline + inventory, reviewable diff |
 | ⌨️ **CLI** | CI, batch rebuilds, hand-checking a spec | Same renderer; `--json` dumps the geometry |
@@ -165,7 +185,7 @@ Node fields: `label` (required), `kind`, `detail`, `parent`, `id`, `status`.
 node bin/cli.js examples/spec.json --out docs        # write the three files
 node bin/cli.js examples/spec.json --json            # geometry only (debugging)
 node bin/cli.js examples/spec.json --stdout > m.svg  # SVG on stdout
-echo '{"title":"t","nodes":[{"label":"root"}]}' | node bin/cli.js -   # read a spec from stdin
+echo '{"title":"t","nodes":[{"label":"root"}]}' | node bin/cli.js -   # spec from stdin
 ```
 
 ## Installation & troubleshooting
@@ -198,13 +218,37 @@ dsh plugin --profile web remove dsh-context-map
 | Process / code execution | No spawn, no `eval`, no remote code, no install hooks |
 | Secrets | None required |
 
-The guard lives in `resolveOutDir` in [`lib/files.js`](lib/files.js) and is covered by tests.
-
 ## Compatibility
 
 - DSH `>=0.2.0-rc.1 <0.3.0-0`; verified on **0.2.1-rc.2** (a scratch profile composes the `context-map` row via `--dump-config`).
 - Node `>=20`.
 - macOS, Linux, Windows.
+
+## How it differs
+
+Every diagramming tool takes a different input:
+
+| Tool type | Input | Output | Good at |
+| :--- | :--- | :--- | :--- |
+| Mind map (XMind, Workflowy) | An outline you type | Radial tree | Brainstorming; weak at hierarchy and cross-branch dependencies |
+| Repo-to-architecture tools | A code repository | System / module structure | Understanding a codebase; they do not record *why* |
+| Diagram DSLs (Mermaid, draw.io) | A DSL or manual placement | A diagram | Precise control; you own layout and colour |
+| **dsh-context-map** | **A conversation** | **Layered IA map, three formats** | **Retros, handovers, PR write-ups; no code reading, no model call** |
+
+It does not replace those tools. It fills the part they cannot see: **decisions, risks and open questions exist only in the conversation.**
+
+## Updates
+
+### 0.1.0 — 2026-11-02
+
+First release: the `context_map` tool, deterministic tree layout, SVG / interactive HTML / Mermaid exports, a CLI, and 55 tests. See [CHANGELOG](CHANGELOG.md).
+
+## Limits
+
+- One map is one tree; several roots get a synthetic parent.
+- 300 nodes / 150 cross links per map. Bigger maps get tall — group first (3–5 branches, 2–6 children each), which is what the tool description tells the model.
+- It does not decide content, only renders it faithfully.
+- Not a design tool: no dragging, no manual placement, no PNG/PDF export (SVG plus browser print covers it).
 
 ## FAQ
 
@@ -219,6 +263,9 @@ Edit `KIND_STYLES` in [`lib/theme.js`](lib/theme.js) — one accent and one tint
 
 **Will the map differ every time?**
 Coordinates are fully deterministic and the timestamp is day-precise, so a same-day rebuild is byte-identical.
+
+**Can it diagram a codebase?**
+No, and it is not intended to — that belongs to the repo-to-architecture tools. This plugin maps what the conversation contains that the code does not.
 
 ## Development
 
