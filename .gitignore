@@ -1,0 +1,9 @@
+node_modules/
+examples/out/
+.dsh-context-map/
+*.log
+.DS_Store
+Thumbs.db
+coverage/
+.nyc_output/
+*.tgz

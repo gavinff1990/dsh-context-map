@@ -1,0 +1,7 @@
+# Normalize line endings in the repository; generated artifacts included.
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.webp binary
+*.tgz binary

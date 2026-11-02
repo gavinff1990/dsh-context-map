@@ -1,0 +1,6 @@
+# dsh-context-map bundle patch: one host row over any profile (web, desktop,
+# headless, tui). The row name resolves from the profile's own node_modules,
+# where `dsh plugin --profile <profile> add dsh-context-map` installed it.
+- insert:
+    - id: context-map
+      name: dsh-context-map
