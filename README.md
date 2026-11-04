@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-0.1.1-0891b2?style=flat-square" alt="Version 0.1.1"></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-0.2.0-0891b2?style=flat-square" alt="Version 0.2.0"></a>
   <a href="https://www.npmjs.com/package/dsh-context-map"><img src="https://img.shields.io/npm/v/dsh-context-map?style=flat-square&color=CB3837" alt="npm"></a>
   <a href="https://www.dsh.so/artifact/dsh-context-map-2/"><img src="https://cdn.dsh.so/badge/install/dsh-context-map-2@0.2.1-rc.5.svg" alt="dsh.so install: runtime verified (L5) on dsh 0.2.1-rc.5"></a>
   <a href="https://www.dsh.so/artifact/dsh-context-map-2/"><img src="https://cdn.dsh.so/badge/dsh-context-map-2.svg" alt="dsh.so risk: low"></a>
@@ -136,6 +136,7 @@ agent 会调用 `context_map`，把对话整理成节点并渲染。想指定位
 | 🖱️ **HTML** | 自己看、发给别人看 | 缩放、适配、搜索、按类型筛选、大纲跳转、A3 打印 |
 | 🧾 **Markdown** | 进 PR、进 wiki、让 review 看见结构 | Mermaid 源码 + 大纲 + 清单，diff 可审阅 |
 | ⌨️ **CLI** | 进 CI、批量重建、手工校样 | 同一套渲染器，`--json` 还能吐布局几何 |
+| 🔎 **session_facts** | 想让节点引用真实路径 | 本会话写/读过的文件、跑过的命令、失败记录 |
 
 ### 🧭 分层布局，不是雷达图
 
@@ -151,6 +152,18 @@ agent 会调用 `context_map`，把对话整理成节点并渲染。想指定位
 - 点图例里的某一类，隐藏/显示该类节点
 - 点左侧大纲的任意一行，跳到对应节点并高亮
 - 右上角 `◐` 在 auto / light / dark 之间切换；`⎙` 直接打印
+
+### 🔎 会话事实：让节点有据可查
+
+模型凭记忆写节点，容易把"好像改过"写成"改过"。插件同时监听本会话的 `tools/result`，记录**真实发生**的事：哪些文件被写、哪些被读、跑过什么命令、哪些调用失败 —— 只存在进程内存里，不读会话日志、不落盘。
+
+需要引用真实路径时，先调 `session_facts`，再拿它的 `path` 去写 `artifact` / `action` 节点：
+
+```text
+session_facts()                       → 本会话的文件与命令清单
+session_facts({ scope: "files" })     → 只看文件
+session_facts({ clear: true })        → 读完后清空，开启新阶段
+```
 
 ### 🔒 零网络、零依赖、零配置
 
@@ -250,6 +263,7 @@ dsh plugin --profile web remove dsh-context-map       # 卸载
 | --- | --- |
 | 网络请求 | **无**。没有 `fetch` / socket / 遥测 |
 | 会话日志 | **不读**。不碰 `~/.dsh/sessions`，只处理本次调用传入的节点 |
+| 会话事实 | 仅进程内存，随插件卸载清空；不落盘、不外发 |
 | 写入范围 | 仅 `outDir` 下 `<slug>.svg` / `<slug>.html` / `<slug>.md` 三个文件 |
 | 进程 / 代码执行 | 不 spawn、不 `eval`、不加载远程代码、无安装钩子 |
 | 密钥 | 不需要任何 API key |

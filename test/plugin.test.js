@@ -11,39 +11,52 @@ import { resolveOutDir, OutputPathError } from '../lib/files.js'
 const here = fileURLToPath(new URL('.', import.meta.url))
 
 /**
- * Capture the registration made by `apply`.
- * @returns {{def: object, disposers: number}}
+ * Capture the registrations made by `apply`.
+ * @returns {{defs: Map<string, object>, disposers: number, listeners: number}}
  */
 function register() {
   /** @type {any} */
-  const captured = { def: null, disposers: 0 }
+  const captured = { defs: new Map(), disposers: 0, listeners: 0 }
   const ctx = {
     tools: {
       register(definition) {
-        captured.def = definition
+        captured.defs.set(definition.name, definition)
         return () => { captured.disposers += 1 }
       },
+    },
+    on(event) {
+      if (event === 'tools/result') captured.listeners += 1
+      return () => {}
     },
   }
   apply(ctx)
   return captured
 }
 
-test('the plugin declares its injection and registers exactly one tool', () => {
-  const { def } = register()
+test('the plugin registers both tools and listens for tool results', () => {
+  const { defs, listeners } = register()
   assert.equal(TOOL_NAME, 'context_map')
-  assert.ok(def !== null, 'registered a definition')
-  assert.equal(def.name, 'context_map')
+  assert.deepEqual([...defs.keys()].sort(), ['context_map', 'session_facts'])
+  assert.equal(listeners, 1, 'subscribes to tools/result once')
+
+  const def = defs.get('context_map')
   assert.equal(def.parameters.type, 'object')
   assert.deepEqual(def.parameters.required, ['title', 'nodes'])
   assert.equal(def.output.schema.type, 'object')
   assert.equal(typeof def.output.render, 'function')
   assert.equal(typeof def.execute, 'function')
   assert.ok(def.description.length > 200, 'description teaches the model the kinds')
+  assert.match(def.description, /session_facts/u, 'points the model at the facts tool')
+
+  const facts = defs.get('session_facts')
+  assert.equal(facts.parameters.type, 'object')
+  assert.equal(typeof facts.execute, 'function')
+  assert.ok(facts.description.includes('files written or read'))
 })
 
 test('the schema exposes every parameter the implementation reads', () => {
-  const { def } = register()
+  const { defs } = register()
+  const def = defs.get('context_map')
   const properties = Object.keys(def.parameters.properties)
   assert.deepEqual(properties, ['title', 'subtitle', 'nodes', 'links', 'outDir', 'slug', 'formats', 'theme', 'locale'])
   const nodeProperties = Object.keys(def.parameters.properties.nodes.items.properties)
@@ -53,7 +66,8 @@ test('the schema exposes every parameter the implementation reads', () => {
 test('execute writes the three artifacts and returns their paths', async () => {
   const directory = await mkdtemp(join(here, '.tmp-'))
   try {
-    const { def } = register()
+    const { defs } = register()
+  const def = defs.get('context_map')
     const value = await def.execute(
       {
         title: 'Runtime fixture',
@@ -91,7 +105,8 @@ test('execute writes the three artifacts and returns their paths', async () => {
 })
 
 test('a bad outline fails with a fixable message', async () => {
-  const { def } = register()
+  const { defs } = register()
+  const def = defs.get('context_map')
   await assert.rejects(
     () => def.execute({ title: 'x', nodes: [{ label: 'a', kind: 'nonsense' }] }, { signal: new AbortController().signal }),
     /valid kinds are goal, context, decision/u,
@@ -101,7 +116,8 @@ test('a bad outline fails with a fixable message', async () => {
 test('an aborted call stops before writing', async () => {
   const directory = await mkdtemp(join(here, '.tmp-'))
   try {
-    const { def } = register()
+    const { defs } = register()
+  const def = defs.get('context_map')
     const controller = new AbortController()
     controller.abort()
     await assert.rejects(
@@ -131,7 +147,8 @@ test('the output guard refuses the dsh home', () => {
 })
 
 test('presenters stay pure on unknown arguments', () => {
-  const { def } = register()
+  const { defs } = register()
+  const def = defs.get('context_map')
   assert.equal(def.presentCall(undefined).card, 'generic')
   assert.equal(def.presentCall({ title: 'Named' }).title, 'Context map · Named')
   const result = def.presentResult({}, { content: [{ type: 'text', text: 'ok' }] })

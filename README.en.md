@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-0.1.1-0891b2?style=flat-square" alt="Version 0.1.1"></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-0.2.0-0891b2?style=flat-square" alt="Version 0.2.0"></a>
   <a href="https://www.npmjs.com/package/dsh-context-map"><img src="https://img.shields.io/npm/v/dsh-context-map?style=flat-square&color=CB3837" alt="npm"></a>
   <a href="https://www.dsh.so/artifact/dsh-context-map-2/"><img src="https://cdn.dsh.so/badge/install/dsh-context-map-2@0.2.1-rc.5.svg" alt="dsh.so install: runtime verified (L5) on dsh 0.2.1-rc.5"></a>
   <a href="https://www.dsh.so/artifact/dsh-context-map-2/"><img src="https://cdn.dsh.so/badge/dsh-context-map-2.svg" alt="dsh.so risk: low"></a>
@@ -133,6 +133,7 @@ Three real artifacts, all generated from `examples/spec.json`:
 | 🖱️ **HTML** | Reading it yourself or sharing it | Zoom, fit, search, filter by kind, outline jumps, A3 print |
 | 🧾 **Markdown** | Pull requests and wikis | Mermaid source + outline + inventory, reviewable diff |
 | ⌨️ **CLI** | CI, batch rebuilds, hand-checking a spec | Same renderer; `--json` dumps the geometry |
+| 🔎 **session_facts** | Citing what actually happened | Files written/read, commands run, failures, for this session |
 
 ### 🧭 A layered layout, not a radar chart
 
@@ -148,6 +149,18 @@ Eight kinds, one accent and one tint each: goal blue, context slate, decision vi
 - Click a legend entry to hide or show that kind
 - Click any line in the outline rail to jump to and flash that node
 - `◐` cycles auto / light / dark; `⎙` prints
+
+### 🔎 Session facts, so nodes cite evidence
+
+A model writing nodes from memory will happily turn "I think I changed that file" into "I changed that file". The plugin also listens to this session's `tools/result` events and records what actually happened — files written and read, commands run, calls that failed — in memory only. No session-log parsing, nothing on disk.
+
+Call `session_facts` first when the map should cite real paths, then use its `path` values in `artifact` and `action` nodes:
+
+```text
+session_facts()                       → files and commands for this session
+session_facts({ scope: "files" })     → files only
+session_facts({ clear: true })        → read then reset, to start a new phase
+```
 
 ### 🔒 No network, no dependencies, no configuration
 
@@ -217,6 +230,7 @@ dsh plugin --profile web remove dsh-context-map
 | --- | --- |
 | Network | **None** — no `fetch`, socket or telemetry |
 | Session logs | **Not read** — only the nodes passed into this call |
+| Session facts | Process memory only, dropped when the plugin unloads; never written to disk or sent anywhere |
 | Writes | Three files under `outDir`: `<slug>.svg`, `<slug>.html`, `<slug>.md` |
 | Process / code execution | No spawn, no `eval`, no remote code, no install hooks |
 | Secrets | None required |

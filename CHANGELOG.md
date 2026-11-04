@@ -4,6 +4,18 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] — 2026-11-04
+
+### Added
+
+- `session_facts` tool: a bounded, in-memory record of what this session
+  actually did — files written and read, commands run, tools used, failures.
+  The map can now cite real paths instead of recollected ones.
+- The plugin subscribes to `tools/result`, keeps facts per session (LRU across
+  eight sessions), and never records its own calls.
+- `context_map`'s description points the model at `session_facts` for
+  `artifact` and `action` nodes.
+
 ## [0.1.1] — 2026-11-02
 
 First version available on npm. No code change from 0.1.0: the version was
