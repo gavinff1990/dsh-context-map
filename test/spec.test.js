@@ -15,7 +15,7 @@ test('normalizes defaults and keeps ids', () => {
   assert.equal(model.title, 'T')
   assert.equal(model.locale, 'zh')
   assert.equal(model.theme, 'auto')
-  assert.deepEqual(model.formats, ['svg', 'html', 'md'])
+  assert.deepEqual(model.formats, ['svg', 'html', 'md', 'json'])
   assert.equal(model.outDir, '.dsh-context-map')
   assert.equal(model.roots.length, 1)
   assert.equal(model.roots[0].id, 'a')

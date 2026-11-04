@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-0.2.0-0891b2?style=flat-square" alt="Version 0.2.0"></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-0.3.0-0891b2?style=flat-square" alt="Version 0.3.0"></a>
   <a href="https://www.npmjs.com/package/dsh-context-map"><img src="https://img.shields.io/npm/v/dsh-context-map?style=flat-square&color=CB3837" alt="npm"></a>
   <a href="https://www.dsh.so/artifact/dsh-context-map-2/"><img src="https://cdn.dsh.so/badge/install/dsh-context-map-2@0.2.1-rc.5.svg" alt="dsh.so install: runtime verified (L5) on dsh 0.2.1-rc.5"></a>
   <a href="https://www.dsh.so/artifact/dsh-context-map-2/"><img src="https://cdn.dsh.so/badge/dsh-context-map-2.svg" alt="dsh.so risk: low"></a>
@@ -48,7 +48,7 @@ At the end of a long session the valuable part is buried: why the direction chan
 
 - **Zero runtime dependencies**, no API key, no network, no session-log access
 - **Deterministic layout**: the same input always produces the same map; a same-day rebuild is byte-identical, so the artifact can be committed
-- **Three artifacts**: vector SVG, zoomable searchable HTML, reviewable Mermaid Markdown
+- **Four artifacts**: vector SVG, zoomable searchable HTML, reviewable Mermaid Markdown, and a JSON that re-renders and diffs
 
 > **Rather not install it by hand?** Send this to your agent:
 >
@@ -111,6 +111,7 @@ The agent calls `context_map`, turns the conversation into nodes, and renders th
 .dsh-context-map/context-map.svg     # paste into a document
 .dsh-context-map/context-map.html    # open in a browser: zoom, search, filter
 .dsh-context-map/context-map.md      # paste into a PR or a wiki
+.dsh-context-map/context-map.json    # the data layer; pass it to update next time
 ```
 
 **Prefer an absolute `outDir`**: the plugin process working directory is not necessarily the session workspace.
@@ -124,6 +125,7 @@ Three real artifacts, all generated from `examples/spec.json`:
 | [`context-map-example.svg`](docs/context-map-example.svg) | 23.9 KB | One vector file; both themes inline, `prefers-color-scheme` applies |
 | [`context-map-example.html`](docs/context-map-example.html) | 39.4 KB | The same map plus toolbar and outline rail; offline, no CDN |
 | [`context-map-example.md`](docs/context-map-example.md) | 5.6 KB | Mermaid `flowchart` + nested outline + kind counts + node inventory |
+| `context-map-example.json` | ~4 KB | The map as data: nodes, links, revision number and history; the file `update` reads |
 
 ## Capabilities
 
@@ -132,6 +134,7 @@ Three real artifacts, all generated from `examples/spec.json`:
 | 🖼️ **SVG** | Documents, README, slides | Vector, adapts to light/dark |
 | 🖱️ **HTML** | Reading it yourself or sharing it | Zoom, fit, search, filter by kind, outline jumps, A3 print |
 | 🧾 **Markdown** | Pull requests and wikis | Mermaid source + outline + inventory, reviewable diff |
+| 🗃️ **JSON** | Revising the same map later | A re-renderable sidecar: revision, history, original nodes |
 | ⌨️ **CLI** | CI, batch rebuilds, hand-checking a spec | Same renderer; `--json` dumps the geometry |
 | 🔎 **session_facts** | Citing what actually happened | Files written/read, commands run, failures, for this session |
 
@@ -162,6 +165,23 @@ session_facts({ scope: "files" })     → files only
 session_facts({ clear: true })        → read then reset, to start a new phase
 ```
 
+### 🔁 Revisions, so a map stays maintainable
+
+The first render writes a `.json` beside the artifacts. To revise, hand that path back as `update` instead of re-describing the whole map:
+
+```text
+context_map({ title: "...", update: "docs/context-map/context-map.json", nodes: [...] })
+```
+
+The plugin diffs the new outline against the previous revision:
+
+- **Added** nodes get a dashed outline and a `+` badge
+- **Changed** nodes get a heavier outline and a `~` badge, and the Markdown lists which fields moved
+- **Removed** nodes stay off the map but appear in the Markdown change list and in the JSON
+- The revision number increments, and the last five revisions' counts are kept in `history`
+
+The HTML export gains a `±` button that dims everything except this revision's changes. A map can now follow a project instead of being redrawn each time.
+
 ### 🔒 No network, no dependencies, no configuration
 
 No `fetch`, no socket, no telemetry, no subprocess, no `eval`. It writes exactly three files under `outDir` and refuses the filesystem root, `~/.dsh`, `~/.ssh`, `~/.aws` and similar locations.
@@ -176,7 +196,8 @@ No `fetch`, no socket, no telemetry, no subprocess, no `eval`. It writes exactly
 | `links` | | Cross-branch dependencies the tree cannot express, capped at 150 |
 | `outDir` | | Output directory, default `.dsh-context-map` |
 | `slug` | | File base name, derived from the title as `[a-z0-9-]` |
-| `formats` | | Subset of `svg` / `html` / `md` |
+| `formats` | | Subset of `svg` / `html` / `md` / `json` |
+| `update` | | Path to the previous `<slug>.json`. With it the call is a **revision**: added and changed nodes are marked, removed ones are listed, the revision number increments |
 | `theme` | | `light` / `dark` / `auto` |
 | `locale` | | `zh` / `en`, default `zh` |
 

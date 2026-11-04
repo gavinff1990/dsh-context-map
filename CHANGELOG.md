@@ -4,6 +4,23 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] — 2026-11-04
+
+### Added
+
+- A `.json` sidecar beside the artifacts: the same map as data — nodes, links,
+  revision number and a five-entry history. It is also a valid input spec, so a
+  map can be re-rendered without re-drafting the outline.
+- `update` parameter: pass the previous sidecar and the call becomes a
+  revision. Added nodes get a dashed outline and a `+` badge, changed nodes a
+  heavier outline and `~`, and removed nodes are listed in the Markdown change
+  section and in the JSON diff.
+- The HTML export gains a `±` button that dims everything except this
+  revision's changes.
+- The Markdown export gains a revision-changes section listing additions,
+  edits (with the fields that moved) and removals.
+- 13 new tests (83 total) covering diff matching, sidecar validation, revision
+  rendering and the on-disk round trip.
 ## [0.2.0] — 2026-11-04
 
 ### Added

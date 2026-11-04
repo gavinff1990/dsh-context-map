@@ -58,7 +58,7 @@ test('the schema exposes every parameter the implementation reads', () => {
   const { defs } = register()
   const def = defs.get('context_map')
   const properties = Object.keys(def.parameters.properties)
-  assert.deepEqual(properties, ['title', 'subtitle', 'nodes', 'links', 'outDir', 'slug', 'formats', 'theme', 'locale'])
+  assert.deepEqual(properties, ['title', 'subtitle', 'nodes', 'links', 'outDir', 'slug', 'formats', 'update', 'theme', 'locale'])
   const nodeProperties = Object.keys(def.parameters.properties.nodes.items.properties)
   assert.deepEqual(nodeProperties, ['id', 'label', 'kind', 'detail', 'parent', 'status'])
 })
@@ -82,8 +82,8 @@ test('execute writes the three artifacts and returns their paths', async () => {
       { signal: new AbortController().signal },
     )
     assert.equal(value.title, 'Runtime fixture')
-    assert.equal(value.files.length, 3)
-    assert.deepEqual(value.files.map((file) => file.format), ['svg', 'html', 'md'])
+    assert.equal(value.files.length, 4)
+    assert.deepEqual(value.files.map((file) => file.format), ['svg', 'html', 'md', 'json'])
     assert.equal(value.stats.nodes, 3)
     assert.equal(value.stats.links, 1)
     for (const file of value.files) {

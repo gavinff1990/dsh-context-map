@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-0.2.0-0891b2?style=flat-square" alt="Version 0.2.0"></a>
+  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-0.3.0-0891b2?style=flat-square" alt="Version 0.3.0"></a>
   <a href="https://www.npmjs.com/package/dsh-context-map"><img src="https://img.shields.io/npm/v/dsh-context-map?style=flat-square&color=CB3837" alt="npm"></a>
   <a href="https://www.dsh.so/artifact/dsh-context-map-2/"><img src="https://cdn.dsh.so/badge/install/dsh-context-map-2@0.2.1-rc.5.svg" alt="dsh.so install: runtime verified (L5) on dsh 0.2.1-rc.5"></a>
   <a href="https://www.dsh.so/artifact/dsh-context-map-2/"><img src="https://cdn.dsh.so/badge/dsh-context-map-2.svg" alt="dsh.so risk: low"></a>
@@ -48,7 +48,7 @@
 
 - **零运行时依赖**，不带 API key，不联网，不读会话日志
 - **确定性布局**：同一份输入永远得到同一张图，同一天重建字节一致，可以提交进 git
-- **三种产物**：矢量 SVG、可缩放可搜索的 HTML、可进 PR 的 Mermaid Markdown
+- **四种产物**：矢量 SVG、可缩放可搜索的 HTML、可进 PR 的 Mermaid Markdown，以及一份可再渲染、可 diff 的 JSON
 
 > **懒得自己装？** 把这句话发给你的 agent：
 >
@@ -114,6 +114,7 @@ agent 会调用 `context_map`，把对话整理成节点并渲染。想指定位
 .dsh-context-map/context-map.svg     # 贴文档
 .dsh-context-map/context-map.html    # 浏览器打开，可缩放/搜索/筛选
 .dsh-context-map/context-map.md      # 进 PR / wiki
+.dsh-context-map/context-map.json    # 数据层，下次 update 用它
 ```
 
 **建议让 agent 传绝对路径的 `outDir`**：插件进程的工作目录不一定等于会话工作区，绝对路径最稳。
@@ -127,6 +128,7 @@ agent 会调用 `context_map`，把对话整理成节点并渲染。想指定位
 | [`context-map-example.svg`](docs/context-map-example.svg) | 23.9 KB | 单文件矢量图；明暗两套主题内联，`prefers-color-scheme` 直接生效 |
 | [`context-map-example.html`](docs/context-map-example.html) | 39.4 KB | 同一张图 + 工具栏 + 大纲栏；离线可用，无 CDN |
 | [`context-map-example.md`](docs/context-map-example.md) | 5.6 KB | Mermaid `flowchart` + 嵌套大纲 + 类型统计 + 节点清单 |
+| `context-map-example.json` | ~4 KB | 图的**数据层**：节点与关联的原始结构、修订号与历史；下次 `update` 就读它 |
 
 ## 能力
 
@@ -135,6 +137,7 @@ agent 会调用 `context_map`，把对话整理成节点并渲染。想指定位
 | 🖼️ **SVG** | 贴进文档、README、幻灯片 | 矢量不失真，深浅色自动适配 |
 | 🖱️ **HTML** | 自己看、发给别人看 | 缩放、适配、搜索、按类型筛选、大纲跳转、A3 打印 |
 | 🧾 **Markdown** | 进 PR、进 wiki、让 review 看见结构 | Mermaid 源码 + 大纲 + 清单，diff 可审阅 |
+| 🗃️ **JSON** | 下次还要改这张图 | 可再渲染的 sidecar：修订号、历史、原始节点 |
 | ⌨️ **CLI** | 进 CI、批量重建、手工校样 | 同一套渲染器，`--json` 还能吐布局几何 |
 | 🔎 **session_facts** | 想让节点引用真实路径 | 本会话写/读过的文件、跑过的命令、失败记录 |
 
@@ -165,6 +168,23 @@ session_facts({ scope: "files" })     → 只看文件
 session_facts({ clear: true })        → 读完后清空，开启新阶段
 ```
 
+### 🔁 修订：图是可维护的资产
+
+第一次画完会落一个 `.json`。下次要改，不必重新口述整张图 —— 把它的路径传给 `update`：
+
+```text
+context_map({ title: "...", update: "docs/context-map/context-map.json", nodes: [...] })
+```
+
+插件会把新提纲和上一版对比，然后：
+
+- 新增节点：虚线边框 + `+` 角标
+- 修改过的节点：加粗边框 + `~` 角标（Markdown 里列出改了哪些字段）
+- 删除的节点：不进图，但出现在 Markdown 的「变更」段和 JSON 的差异里
+- 修订号 +1，最近 5 次的增删改计数记进 sidecar 的 `history`
+
+HTML 版本右上角会多一个 `±` 按钮：只显示本轮变更的节点。**这样一张图可以跟着项目演进，而不是每次重画。**
+
 ### 🔒 零网络、零依赖、零配置
 
 没有 `fetch`、没有 socket、没有遥测，不 spawn 子进程，不 `eval`。它只写 `outDir` 下的三个文件，并显式拒绝文件系统根目录、`~/.dsh`、`~/.ssh`、`~/.aws` 等位置。
@@ -181,7 +201,8 @@ session_facts({ clear: true })        → 读完后清空，开启新阶段
 | `links` | | 树表达不了的跨分支依赖，上限 150 |
 | `outDir` | | 输出目录，默认 `.dsh-context-map`；推荐绝对路径 |
 | `slug` | | 文件基名，默认由标题推导为 `[a-z0-9-]` |
-| `formats` | | `svg` / `html` / `md` 子集，默认全出 |
+| `formats` | | `svg` / `html` / `md` / `json` 子集，默认全出 |
+| `update` | | 上一版 `<slug>.json` 的路径；给了它这次就是**修订**：新增/修改打标、删除列清单、修订号 +1 |
 | `theme` | | `light` / `dark` / `auto`（默认跟随系统） |
 | `locale` | | `zh` / `en`，默认 `zh` |
 

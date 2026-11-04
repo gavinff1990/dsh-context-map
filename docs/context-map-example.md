@@ -2,7 +2,7 @@
 
 > 本次对话的上下文结构：调研、设计、交付与风险
 
-> 18 个节点 · 3 层 · 2 条关联 · 生成于 2026-11-02
+> 18 个节点 · 3 层 · 2 条关联 · 生成于 2026-11-04
 
 ```mermaid
 flowchart LR
@@ -120,5 +120,6 @@ flowchart LR
 - `context-map-example.svg`
 - `context-map-example.html`
 - `context-map-example.md`
+- `context-map-example.json`
 
-<sub>dsh-context-map v0.1.0 · 根据对话纲要生成</sub>
+<sub>dsh-context-map v0.3.0 · 根据对话纲要生成</sub>

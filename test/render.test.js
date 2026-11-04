@@ -104,8 +104,8 @@ test('composeMap produces all three artifacts with stable names', () => {
     { title: 'Context Map v2', nodes: [{ label: 'root', kind: 'goal' }] },
     { now: NOW, version: '9.9.9' },
   )
-  assert.deepEqual(composed.artifacts.map((artifact) => artifact.filename), ['context-map-v2.svg', 'context-map-v2.html', 'context-map-v2.md'])
-  assert.deepEqual(composed.artifacts.map((artifact) => artifact.format), ['svg', 'html', 'md'])
+  assert.deepEqual(composed.artifacts.map((artifact) => artifact.filename), ['context-map-v2.svg', 'context-map-v2.html', 'context-map-v2.md', 'context-map-v2.json'])
+  assert.deepEqual(composed.artifacts.map((artifact) => artifact.format), ['svg', 'html', 'md', 'json'])
   assert.equal(composed.stats.nodes, 1)
   assert.ok(composed.stats.width >= 700)
 })

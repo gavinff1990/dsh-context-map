@@ -47,6 +47,9 @@
   .cm-legend-title{fill:var(--faint);font-size:9.5px;font-weight:700;letter-spacing:1.4px}
   .cm-legend-text{fill:var(--muted);font-size:11px}
   .cm-legend-dot{fill:var(--kind);stroke:none}
+  .cm-node-new .cm-card{stroke-dasharray:5 3}
+  .cm-node-changed .cm-card{stroke-width:2px}
+  .cm-diff-badge text{fill:#fff;font-size:9px;font-weight:700}
   .cm-brand{fill:var(--faint);font-size:10px;letter-spacing:.3px}
   .cm-hint{fill:var(--faint);font-size:10px}
   </style>
@@ -59,7 +62,7 @@
   <g class="cm-header">
     <text class="cm-meta" x="56" y="34">上下文信息架构图</text>
     <text class="cm-meta" x="1151.27" y="34" text-anchor="end">18 个节点 · 3 层 · 2 条关联</text>
-    <text class="cm-meta" x="1151.27" y="52" text-anchor="end">生成于 2026-11-02</text>
+    <text class="cm-meta" x="1151.27" y="52" text-anchor="end">生成于 2026-11-04</text>
     <text class="cm-title" x="56" y="80">把 DSH 插件做成三个渠道都能上架的产品</text>
     <text class="cm-subtitle" x="56" y="107">本次对话的上下文结构：调研、设计、交付与风险</text>
   </g>
@@ -95,6 +98,7 @@
       <circle class="cm-status" cx="75" cy="820" r="3.1" style="--status:#2563eb"><title>状态: 进行中</title></circle>
       <text class="cm-label" x="71" y="847.88">开发 DSH 插件并完成三渠道上架</text>
       <text class="cm-detail" x="71" y="863.88">能装、能用、能过安全扫描，不是占位 demo</text>
+      
     </g>
     <g class="cm-node cm-n-context" data-id="b1" data-kind="context" data-search="渠道调研 三个目录的收录机制各不相同，必须先摸清规则 context">
       <rect class="cm-card-halo" x="386.02" y="268.5" width="271.5" height="86" rx="12"/>
@@ -104,6 +108,7 @@
       <circle class="cm-status" cx="405.02" cy="287.5" r="3.1" style="--status:#16a34a"><title>状态: 已完成</title></circle>
       <text class="cm-label" x="401.02" y="315.38">渠道调研</text>
       <text class="cm-detail" x="401.02" y="331.38">三个目录的收录机制各不相同，必须先摸清规则</text>
+      
     </g>
     <g class="cm-node cm-n-context" data-id="b1a" data-kind="context" data-search="dsh.so 是验收清单制 dsh 字段 / cordis 清单 / dsh topic 三者有其一；readme 带安装说明；spdx 许可证；源码可扫描 context">
       <rect class="cm-card-halo" x="733.52" y="144" width="320" height="101" rx="12"/>
@@ -113,6 +118,7 @@
       <text class="cm-label" x="748.52" y="190.88">dsh.so 是验收清单制</text>
       <text class="cm-detail" x="748.52" y="206.88">dsh 字段 / cordis 清单 / DSH topic 三者有其一；</text>
       <text class="cm-detail" x="748.52" y="221.88">README 带安装说明；SPDX 许可证；源码可扫描</text>
+      
     </g>
     <g class="cm-node cm-n-context" data-id="b1b" data-kind="context" data-search="marketplace 靠 github topic 自动同步 仓库描述即卡片摘要，readme 即详情页，缺 license 会被标注为保留所有权利 context">
       <rect class="cm-card-halo" x="733.52" y="261" width="320" height="101" rx="12"/>
@@ -122,6 +128,7 @@
       <text class="cm-label" x="748.52" y="307.88">marketplace 靠 GitHub topic 自动同步</text>
       <text class="cm-detail" x="748.52" y="323.88">仓库描述即卡片摘要，README 即详情页，缺 LICENSE</text>
       <text class="cm-detail" x="748.52" y="338.88">会被标注为保留所有权利</text>
+      
     </g>
     <g class="cm-node cm-n-context" data-id="b1c" data-kind="context" data-search="curated 清单是一插件一 yaml data/plugins/&lt;owner&gt;__&lt;repo&gt;.yml，readme 由脚本生成，不要手改 context">
       <rect class="cm-card-halo" x="733.52" y="378" width="320" height="101" rx="12"/>
@@ -131,6 +138,7 @@
       <text class="cm-label" x="748.52" y="424.88">curated 清单是一插件一 YAML</text>
       <text class="cm-detail" x="748.52" y="440.88">data/plugins/&lt;owner&gt;__&lt;repo&gt;.yml，README 由脚本生</text>
       <text class="cm-detail" x="748.52" y="455.88">成，不要手改</text>
+      
     </g>
     <g class="cm-node cm-n-decision" data-id="b2" data-kind="decision" data-search="产品设计 四件事定下来，后面只是执行 decision">
       <rect class="cm-card-halo" x="386.02" y="604.5" width="271.5" height="86" rx="12"/>
@@ -140,6 +148,7 @@
       <circle class="cm-status" cx="405.02" cy="623.5" r="3.1" style="--status:#16a34a"><title>状态: 已完成</title></circle>
       <text class="cm-label" x="401.02" y="651.38">产品设计</text>
       <text class="cm-detail" x="401.02" y="667.38">四件事定下来，后面只是执行</text>
+      
     </g>
     <g class="cm-node cm-n-decision" data-id="b2a" data-kind="decision" data-search="方向：对话上下文信息架构图 目标、背景、决策、动作、产物、风险、待确认分组成图 decision">
       <rect class="cm-card-halo" x="733.52" y="495" width="320" height="86" rx="12"/>
@@ -149,6 +158,7 @@
       <circle class="cm-status" cx="752.52" cy="514" r="3.1" style="--status:#16a34a"><title>状态: 已完成</title></circle>
       <text class="cm-label" x="748.52" y="541.88">方向：对话上下文信息架构图</text>
       <text class="cm-detail" x="748.52" y="557.88">目标、背景、决策、动作、产物、风险、待确认分组成图</text>
+      
     </g>
     <g class="cm-node cm-n-decision" data-id="b2b" data-kind="decision" data-search="零运行时依赖 直接注册原始 tooldefinition，parameters 写 json schema，不跟随作者 dsl 漂移 decision">
       <rect class="cm-card-halo" x="733.52" y="597" width="320" height="101" rx="12"/>
@@ -159,6 +169,7 @@
       <text class="cm-label" x="748.52" y="643.88">零运行时依赖</text>
       <text class="cm-detail" x="748.52" y="659.88">直接注册原始 ToolDefinition，parameters 写 JSON</text>
       <text class="cm-detail" x="748.52" y="674.88">Schema，不跟随作者 DSL 漂移</text>
+      
     </g>
     <g class="cm-node cm-n-decision" data-id="b2c" data-kind="decision" data-search="输出 svg / html / mermaid 三件套 svg 进文档，html 给人看，markdown 进 pr 可审阅 decision">
       <rect class="cm-card-halo" x="733.52" y="714" width="320" height="86" rx="12"/>
@@ -168,6 +179,7 @@
       <circle class="cm-status" cx="752.52" cy="733" r="3.1" style="--status:#16a34a"><title>状态: 已完成</title></circle>
       <text class="cm-label" x="748.52" y="760.88">输出 SVG / HTML / Mermaid 三件套</text>
       <text class="cm-detail" x="748.52" y="776.88">SVG 进文档，HTML 给人看，Markdown 进 PR 可审阅</text>
+      
     </g>
     <g class="cm-node cm-n-action" data-id="b3" data-kind="action" data-search="交付计划 从渲染内核到三份提交物 action">
       <rect class="cm-card-halo" x="386.02" y="976.5" width="271.5" height="86" rx="12"/>
@@ -177,6 +189,7 @@
       <circle class="cm-status" cx="405.02" cy="995.5" r="3.1" style="--status:#2563eb"><title>状态: 进行中</title></circle>
       <text class="cm-label" x="401.02" y="1023.38">交付计划</text>
       <text class="cm-detail" x="401.02" y="1039.38">从渲染内核到三份提交物</text>
+      
     </g>
     <g class="cm-node cm-n-action" data-id="b3a" data-kind="action" data-search="确定性树布局与双主题渲染 无 canvas、无随机数，同输入永远得到同一张图 action">
       <rect class="cm-card-halo" x="733.52" y="816" width="320" height="86" rx="12"/>
@@ -186,6 +199,7 @@
       <circle class="cm-status" cx="752.52" cy="835" r="3.1" style="--status:#2563eb"><title>状态: 进行中</title></circle>
       <text class="cm-label" x="748.52" y="862.88">确定性树布局与双主题渲染</text>
       <text class="cm-detail" x="748.52" y="878.88">无 canvas、无随机数，同输入永远得到同一张图</text>
+      
     </g>
     <g class="cm-node cm-n-action" data-id="b3b" data-kind="action" data-search="单元测试与真实启动冒烟 覆盖规格校验、布局不重叠、转义、插件注册与写盘 action">
       <rect class="cm-card-halo" x="733.52" y="918" width="320" height="86" rx="12"/>
@@ -195,6 +209,7 @@
       <circle class="cm-status" cx="752.52" cy="937" r="3.1" style="--status:#94a3b8"><title>状态: 计划中</title></circle>
       <text class="cm-label" x="748.52" y="964.88">单元测试与真实启动冒烟</text>
       <text class="cm-detail" x="748.52" y="980.88">覆盖规格校验、布局不重叠、转义、插件注册与写盘</text>
+      
     </g>
     <g class="cm-node cm-n-action" data-id="b3c" data-kind="action" data-search="三渠道提交物与 pr 文案 dsh.so 提交串、marketplace 表单、两处 curated 清单补丁 action">
       <rect class="cm-card-halo" x="733.52" y="1020" width="320" height="101" rx="12"/>
@@ -205,6 +220,7 @@
       <text class="cm-label" x="748.52" y="1066.88">三渠道提交物与 PR 文案</text>
       <text class="cm-detail" x="748.52" y="1082.88">dsh.so 提交串、marketplace 表单、两处 curated 清单</text>
       <text class="cm-detail" x="748.52" y="1097.88">补丁</text>
+      
     </g>
     <g class="cm-node cm-n-artifact" data-id="b3d" data-kind="artifact" data-search="dsh-context-map 仓库 lib/、bin/、docs/、examples/、license、ci artifact">
       <rect class="cm-card-halo" x="733.52" y="1137" width="320" height="86" rx="12"/>
@@ -214,6 +230,7 @@
       <circle class="cm-status" cx="752.52" cy="1156" r="3.1" style="--status:#2563eb"><title>状态: 进行中</title></circle>
       <text class="cm-label" x="748.52" y="1183.88">dsh-context-map 仓库</text>
       <text class="cm-detail" x="748.52" y="1199.88">lib/、bin/、docs/、examples/、LICENSE、CI</text>
+      
     </g>
     <g class="cm-node cm-n-risk" data-id="b4" data-kind="risk" data-search="风险与待办 上架前必须解决的两件事 risk">
       <rect class="cm-card-halo" x="386.02" y="1348.5" width="271.5" height="86" rx="12"/>
@@ -223,6 +240,7 @@
       <circle class="cm-status" cx="405.02" cy="1367.5" r="3.1" style="--status:#2563eb"><title>状态: 进行中</title></circle>
       <text class="cm-label" x="401.02" y="1395.38">风险与待办</text>
       <text class="cm-detail" x="401.02" y="1411.38">上架前必须解决的两件事</text>
+      
     </g>
     <g class="cm-node cm-n-risk" data-id="b4a" data-kind="risk" data-search="本机没有 github / npm 登录态 推仓库、发 npm 包、开 pr 都需要你完成一次授权 risk">
       <rect class="cm-card-halo" x="733.52" y="1239" width="320" height="86" rx="12"/>
@@ -232,6 +250,7 @@
       <circle class="cm-status" cx="752.52" cy="1258" r="3.1" style="--status:#e11d48"><title>状态: 受阻</title></circle>
       <text class="cm-label" x="748.52" y="1285.88">本机没有 GitHub / npm 登录态</text>
       <text class="cm-detail" x="748.52" y="1301.88">推仓库、发 npm 包、开 PR 都需要你完成一次授权</text>
+      
     </g>
     <g class="cm-node cm-n-risk" data-id="b4b" data-kind="risk" data-search="插件进程 cwd ≠ 会话工作区 默认输出目录可能落在应用目录，模型应显式传绝对 outdir risk">
       <rect class="cm-card-halo" x="733.52" y="1341" width="320" height="101" rx="12"/>
@@ -242,6 +261,7 @@
       <text class="cm-label" x="748.52" y="1387.88">插件进程 cwd ≠ 会话工作区</text>
       <text class="cm-detail" x="748.52" y="1403.88">默认输出目录可能落在应用目录，模型应显式传绝对</text>
       <text class="cm-detail" x="748.52" y="1418.88">outDir</text>
+      
     </g>
     <g class="cm-node cm-n-question" data-id="b4c" data-kind="question" data-search="github 用户名与仓库归属未定 决定 curated 文件名与全部链接 question">
       <rect class="cm-card-halo" x="733.52" y="1458" width="320" height="86" rx="12"/>
@@ -250,6 +270,7 @@
       <text class="cm-pill" x="748.52" y="1481">待确认</text>
       <text class="cm-label" x="748.52" y="1504.88">GitHub 用户名与仓库归属未定</text>
       <text class="cm-detail" x="748.52" y="1520.88">决定 curated 文件名与全部链接</text>
+      
     </g>
   </g>
   <g class="cm-legend">
@@ -262,6 +283,6 @@
     <g class="cm-legend-item cm-n-risk" data-kind="risk"><rect class="cm-legend-dot" x="716" y="1570" width="8" height="8" rx="2.5"/><text class="cm-legend-text" x="730" y="1578">风险 · 3</text></g>
     <g class="cm-legend-item cm-n-question" data-kind="question"><rect class="cm-legend-dot" x="56" y="1600" width="8" height="8" rx="2.5"/><text class="cm-legend-text" x="70" y="1608">待确认 · 1</text></g>
   </g>
-  <text class="cm-brand" x="56" y="1740">dsh-context-map v0.1.0</text>
+  <text class="cm-brand" x="56" y="1740">dsh-context-map v0.3.0</text>
   <text class="cm-hint" x="1151.27" y="1740" text-anchor="end">根据对话纲要生成</text>
 </svg>
